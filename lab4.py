@@ -5,13 +5,11 @@ from ddt import ddt, data, unpack
 
 @ddt
 class ArtlebedevCaseTest(unittest.TestCase):
-    driver = webdriver.Firefox(r"C:\Program Files\chromedriver.exe")
+    driver = webdriver.Firefox(executable_path=r"C:\Program Files\geckodriver.exe")
 
     def setUp(self):
         self.driver.get("https://www.artlebedev.ru/case/")
-
-    def tearDown(self):
-        self.driver.refresh()
+        self.driver.execute_script("window.scrollTo(0, 1000)")
 
     def _select_mode(self, mode):
         self.driver.find_element_by_link_text(mode).click()
@@ -37,16 +35,63 @@ class ArtlebedevCaseTest(unittest.TestCase):
 
     @data(
         {"source": "hello world", "target": "HELLO WORLD"},
-        {"source": "", "target": ""},
         {"source": "TEST", "target": "TEST"})
     @unpack
     def test_upper_case(self, source, target):
         self._select_mode("ВЕРХНИЙ РЕГИСТР")
-        self._capture_source().send_keys(source)
-        self.driver.implicitly_wait(1)
-        print(self._capture_target().text)
-        self.assertEqual(target, self._capture_target().text)
+        self._capture_source().clear()
+        if (len(source) != 0):
+            self._capture_source().send_keys(source)
+        self.driver.implicitly_wait(2)
+        self.assertEqual(target, self._capture_target().get_attribute("value"))
 
+    @data(
+        {"source": "hello world", "target": "hello world"},
+        {"source": "TEST", "target": "test"})
+    @unpack
+    def test_lower_case(self, source, target):
+        self._select_mode("нижний регистр")
+        self._capture_source().clear()
+        if (len(source) != 0):
+            self._capture_source().send_keys(source)
+        self.driver.implicitly_wait(2)
+        self.assertEqual(target, self._capture_target().get_attribute("value"))
+
+    @data(
+        {"source": "hello world", "target": "Hello World"},
+        {"source": "TEST", "target": "Test"})
+    @unpack
+    def test_captialize(self, source, target):
+        self._select_mode("Заглавные Буквы")
+        self._capture_source().clear()
+        if (len(source) != 0):
+            self._capture_source().send_keys(source)
+        self.driver.implicitly_wait(2)
+        self.assertEqual(target, self._capture_target().get_attribute("value"))
+
+    @data(
+        {"source": "hello world", "target": "Hello world"},
+        {"source": "TEST", "target": "Test"})
+    @unpack
+    def test_captialize_first(self, source, target):
+        self._select_mode("Первая заглавная")
+        self._capture_source().clear()
+        if (len(source) != 0):
+            self._capture_source().send_keys(source)
+        self.driver.implicitly_wait(2)
+        self.assertEqual(target, self._capture_target().get_attribute("value"))
+
+    @data(
+        {"source": "Hello World", "target": "hELLO wORLD"},
+        {"source": "TEST", "target": "test"})
+    @unpack
+    def test_invert(self, source, target):
+        self._select_mode("иНВЕРСИЯ рЕГИСТРА")
+        self._capture_source().clear()
+        if (len(source) != 0):
+            self._capture_source().send_keys(source)
+        self.driver.implicitly_wait(2)
+        self.assertEqual(target, self._capture_target().get_attribute("value"))
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
