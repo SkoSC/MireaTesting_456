@@ -1,10 +1,10 @@
-https://docs.google.com
-https://vk.com
-https://www.youtube.com
-https://translate.google.ru
-https://stackoverflow.com
-https://www.mirea.ru
 https://about.gitlab.com
-https://www.wolframalpha.com
+https://www.mirea.ru
 https://www.tinkoff.ru
+https://www.youtube.com
+https://docs.google.com
 https://termilab.ru
+https://vk.com
+https://stackoverflow.com
+https://translate.google.ru
+https://www.wolframalpha.com
