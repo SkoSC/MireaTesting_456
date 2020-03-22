@@ -1,7 +1,8 @@
 from time import sleep
 
+from ddt import ddt, data
 from selenium import webdriver
-from random import shuffle
+from random import shuffle, seed
 import unittest
 
 class Program:
@@ -10,14 +11,14 @@ class Program:
     urls = []
 
     def read_urls_from_config(self):
-        with open("site-comfig.txt", "r") as file:
+        with open(f"site-config.txt", "r") as file:
             self.urls = [line.replace('\n', '') for line in file.readlines()]
 
     def shuffle(self):
         shuffle(self.urls)
 
     def write_urls_to_config(self):
-        with open("site-comfig.txt", "w") as file:
+        with open(f"site-config.txt", "w") as file:
             file.write("\n".join(self.urls))
 
     def open_tabs_from_urls(self):
@@ -34,6 +35,11 @@ class Program:
 class Test(unittest.TestCase):
 
     def test(self):
+        with open("site-config.txt", 'w') as file:
+            with open("site-config-setup.txt", "r") as setup:
+                file.write(setup.read())
+
+        seed(1)
         program = Program()
         program.read_urls_from_config()
 
@@ -50,6 +56,10 @@ class Test(unittest.TestCase):
         program.close_open_tabs_reversed()
 
         self.assertEqual(1, len(program.driver.window_handles))
+
+        with open("site-config.txt", "r") as file:
+            with open("site-config-expected.txt", "r") as expected:
+                self.assertEqual(expected.read(), file.read())
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
