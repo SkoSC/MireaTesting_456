@@ -20,10 +20,44 @@ class ArtlebedevCaseTest(unittest.TestCase):
     def _capture_target(self):
         return self.driver.find_element_by_id("target")
 
+    # CLASS 1
+    @data(
+        {"text": "привет"},
+        {"text": "ТЕСТ Тест"},
+        {"text": "длинный текст "*100}
+    )
+    @unpack
+    def test_input_field_ru(self, text):
+        self._capture_source().send_keys(text)
+        self.assertEqual(text, self._capture_source().text)
+
+    # CLASS 2
+    @data(
+        {"text": "hello world"},
+        {"text": "TEST CASE"},
+        {"text": "long text "*100}
+    )
+    @unpack
+    def test_input_field_en(self, text):
+        self._capture_source().send_keys(text)
+        self.assertEqual(text, self._capture_source().text)
+
+    # CLASS 3
+    @data(
+        {"text": "hallo"},
+        {"text": "sstraße"}
+    )
+    @unpack
+    def test_input_field_de(self, text):
+        self._capture_source().send_keys(text)
+        self.assertEqual(text, self._capture_source().text)
+
+    # CLASS 17
     def test_title(self):
         title_element = self.driver.find_element_by_class_name("als-text-title")
         self.assertEqual("Конвертер регистров", title_element.text)
 
+    # CLASS 16
     def test_method_text(self):
         table = self.driver.find_element_by_id("method-tabs")
         children = table.find_elements_by_xpath(".//*")
@@ -33,6 +67,7 @@ class ArtlebedevCaseTest(unittest.TestCase):
         self.assertEqual("Первая заглавная", children[3].text)
         self.assertEqual("иНВЕРСИЯ рЕГИСТРА", children[4].text)
 
+    # CLASS 8
     @data(
         {"source": "hello world", "target": "HELLO WORLD"},
         {"source": "TEST", "target": "TEST"})
@@ -45,6 +80,7 @@ class ArtlebedevCaseTest(unittest.TestCase):
         self.driver.implicitly_wait(2)
         self.assertEqual(target, self._capture_target().get_attribute("value"))
 
+    # CLASS 9
     @data(
         {"source": "hello world", "target": "hello world"},
         {"source": "TEST", "target": "test"})
@@ -57,6 +93,7 @@ class ArtlebedevCaseTest(unittest.TestCase):
         self.driver.implicitly_wait(2)
         self.assertEqual(target, self._capture_target().get_attribute("value"))
 
+    # CLASS 10
     @data(
         {"source": "hello world", "target": "Hello World"},
         {"source": "TEST", "target": "Test"})
@@ -69,6 +106,7 @@ class ArtlebedevCaseTest(unittest.TestCase):
         self.driver.implicitly_wait(2)
         self.assertEqual(target, self._capture_target().get_attribute("value"))
 
+    # CLASS 11
     @data(
         {"source": "hello world", "target": "Hello world"},
         {"source": "TEST", "target": "Test"})
@@ -81,6 +119,7 @@ class ArtlebedevCaseTest(unittest.TestCase):
         self.driver.implicitly_wait(2)
         self.assertEqual(target, self._capture_target().get_attribute("value"))
 
+    # CLASS 12
     @data(
         {"source": "Hello World", "target": "hELLO wORLD"},
         {"source": "TEST", "target": "test"})
@@ -92,6 +131,20 @@ class ArtlebedevCaseTest(unittest.TestCase):
             self._capture_source().send_keys(source)
         self.driver.implicitly_wait(2)
         self.assertEqual(target, self._capture_target().get_attribute("value"))
+
+    # CLASS 14
+    def text_clear_text(self):
+        self._capture_source().send_keys("HELLO WORLD")
+        clear_button = self.driver.find_element_by_class_name("als-input-clear-button")
+        clear_button.click()
+        self.assertEqual(self._capture_source(), "")
+
+    # CLASS 15
+    def text_copy_text(self):
+        self._select_mode("нижний регистр")
+        self._capture_source().send_keys("HELLO WORLD")
+        copy_button = self.driver.find_element_by_class_name("als-input-copy-button show")
+        copy_button.click()
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
